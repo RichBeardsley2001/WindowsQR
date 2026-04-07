@@ -48,6 +48,7 @@ def main() -> None:
 
     # 3. Inno Setup
     iscc_candidates = [
+        r"C:\Users\Rich\AppData\Local\Programs\Inno Setup 6\ISCC.exe",  # winget user install
         r"C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
         r"C:\Program Files\Inno Setup 6\ISCC.exe",
         r"C:\Program Files (x86)\Inno Setup 5\ISCC.exe",
@@ -56,7 +57,16 @@ def main() -> None:
     ]
     for iscc in iscc_candidates:
         try:
-            run([iscc, f"/DAppVersion={version}", "WindowsQR.iss"])
+            # Use PowerShell to handle paths with spaces reliably on Windows
+            import platform
+            if platform.system() == "Windows":
+                run([
+                    "powershell.exe", "-Command",
+                    f"& '{iscc}' '/DAppVersion={version}' "
+                    f"'{os.path.join(ROOT, \"WindowsQR.iss\")}'"
+                ])
+            else:
+                run([iscc, f"/DAppVersion={version}", "WindowsQR.iss"])
             print(f"\nInstaller created: Output/WindowsQR-Setup-{version}.exe")
             break
         except (FileNotFoundError, subprocess.CalledProcessError) as exc:

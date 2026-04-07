@@ -55,5 +55,5 @@ if __name__ == "__main__":
         append_images=[icon_16, icon_32, icon_48],
     )
 
-    print("assets/icon.png  ✓")
-    print("assets/icon.ico  ✓")
+    print("assets/icon.png  OK")
+    print("assets/icon.ico  OK")
